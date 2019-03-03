@@ -28,7 +28,7 @@ import java.util.Map;
 public class GenericTokenParserTest {
 
   public static class VariableTokenHandler implements TokenHandler {
-    private Map<String, String> variables = new HashMap<>();
+    private Map<String, String> variables;
 
     public VariableTokenHandler(Map<String, String> variables) {
       this.variables = variables;

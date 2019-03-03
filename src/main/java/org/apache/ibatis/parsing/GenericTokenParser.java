@@ -39,7 +39,9 @@ public class GenericTokenParser {
     if (start == -1) {
       return text;
     }
+
     char[] src = text.toCharArray();
+
     int offset = 0;
     final StringBuilder builder = new StringBuilder();
     StringBuilder expression = null;

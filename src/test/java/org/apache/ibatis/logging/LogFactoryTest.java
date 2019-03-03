@@ -36,7 +36,9 @@ public class LogFactoryTest {
   public void shouldUseCommonsLogging() {
     LogFactory.useCommonsLogging();
     Log log = LogFactory.getLog(Object.class);
-    logSomething(log);
+      boolean debugEnabled = log.isDebugEnabled();
+      System.out.println("isDebugEnabled：" + debugEnabled);
+      logSomething(log);
     assertEquals(log.getClass().getName(), JakartaCommonsLoggingImpl.class.getName());
   }
 

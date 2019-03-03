@@ -24,7 +24,7 @@ import java.sql.SQLException;
  *
  * @author Clinton Begin
  */
-public interface Transaction {
+public interface Transaction{
 
   /**
    * Retrieve inner database connection
