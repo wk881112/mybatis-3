@@ -24,6 +24,33 @@
 
     <!-- autoMappingBehavior should be set in each test case -->
 
+    <properties>
+        <property name="abc" value="abc"/>
+    </properties>
+
+    <settings>
+        <setting name="aaa" value="bbb"/>
+    </settings>
+
+    <typeAliases>
+        <typeAlias type="abc" alias="abc" ></typeAlias>
+        <package name="com.googlecode" />
+    </typeAliases>
+
+    <typeHandlers>
+        <typeHandler handler="abc"/>
+    </typeHandlers>
+
+    <objectFactory type="abc" />
+
+    <objectWrapperFactory type="abc"/>
+
+    <reflectorFactory type="abc" />
+
+    <plugins>
+        <plugin interceptor="abc"></plugin>
+    </plugins>
+
     <environments default="development">
         <environment id="development">
             <transactionManager type="JDBC">
@@ -37,8 +64,11 @@
         </environment>
     </environments>
 
-    <!--<mappers>-->
-        <!--<mapper resource="org/apache/ibatis/autoconstructor/AutoConstructorMapper.xml"/>-->
-    <!--</mappers>-->
+    <databaseIdProvider type="ab"/>
+
+
+    <mappers>
+        <mapper resource="org/apache/ibatis/autoconstructor/AutoConstructorMapper.xml"/>
+    </mappers>
 
 </configuration>
