@@ -101,16 +101,38 @@ public class XMLConfigBuilder extends BaseBuilder {
 
   private void parseConfiguration(XNode root) {
     try {
-      //issue #117 read properties first
+      // #1 properties
       propertiesElement(root.evalNode("properties"));
+
+      // #2 settings
+      // 校验标签值是否符合规则，并封装到新的properties对象中
       Properties settings = settingsAsProperties(root.evalNode("settings"));
-      loadCustomVfs(settings);
-      loadCustomLogImpl(settings);
+      loadCustomVfs(settings); // 手动注入vfsImpl 的setting。可以有多个实现，以逗号分隔
+      loadCustomLogImpl(settings); // 自定义指定日志实现，使用别名，别名在Configuration构造中指定了
+
+      // #3 typeAlias
+      //
       typeAliasesElement(root.evalNode("typeAliases"));
+
+
+      // #4 plugins
+      //
       pluginElement(root.evalNode("plugins"));
+
+      // #5 objectFactory
+      //
       objectFactoryElement(root.evalNode("objectFactory"));
+
+      // #6 objectWrapperFactory
+      //
       objectWrapperFactoryElement(root.evalNode("objectWrapperFactory"));
+
+      // #7 reflectorFactory
+      //
       reflectorFactoryElement(root.evalNode("reflectorFactory"));
+
+      // #2 settings
+      //
       settingsElement(settings);
       // read it after objectFactory and objectWrapperFactory issue #631
       environmentsElement(root.evalNode("environments"));
@@ -122,12 +144,26 @@ public class XMLConfigBuilder extends BaseBuilder {
     }
   }
 
+  /**
+   * #1 解析settings配置
+   *
+   * 参数名是有严格限定的，对应org.apache.ibatis.session.Configuration里的字setter属性
+   *
+   * 利用反射解析Configuration类并判断是否有对应setting.name的setter方法
+   *
+   *
+   * @param context
+   * @return
+   */
   private Properties settingsAsProperties(XNode context) {
     if (context == null) {
       return new Properties();
     }
+
+    // 解析settings的多个属性
     Properties props = context.getChildrenAsProperties();
     // Check that all settings are known to the configuration class
+    // 通过DefaultReflectorFactory获取Configuration Class对象元数据，封装到MetaClass对象
     MetaClass metaConfig = MetaClass.forClass(Configuration.class, localReflectorFactory);
     for (Object key : props.keySet()) {
       if (!metaConfig.hasSetter(String.valueOf(key))) {
@@ -161,7 +197,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       for (XNode child : parent.getChildren()) {
         if ("package".equals(child.getName())) {
           String typeAliasPackage = child.getStringAttribute("name");
-          configuration.getTypeAliasRegistry().registerAliases(typeAliasPackage);
+          typeAliasRegistry.registerAliases(typeAliasPackage);
         } else {
           String alias = child.getStringAttribute("alias");
           String type = child.getStringAttribute("type");
@@ -218,6 +254,17 @@ public class XMLConfigBuilder extends BaseBuilder {
     }
   }
 
+  /**
+   * #1 解析properties配置
+   *
+   * 属性覆盖优先级
+   *
+   * 方法参数传入 > resource/url指定的properties配置文件 > \<property\>标签属性
+   *
+   *
+   * @param context
+   * @throws Exception
+   */
   private void propertiesElement(XNode context) throws Exception {
     if (context != null) {
       Properties defaults = context.getChildrenAsProperties();
@@ -231,10 +278,15 @@ public class XMLConfigBuilder extends BaseBuilder {
       } else if (url != null) {
         defaults.putAll(Resources.getUrlAsProperties(url));
       }
+
+      // 将XMLConfigBuilder构造方法里的传递到BaseBuilder中configuration里合并到XML的properties一起
+      // 同时方法参数里的同名配置会覆盖配置文件里的配置
       Properties vars = configuration.getVariables();
       if (vars != null) {
         defaults.putAll(vars);
       }
+
+
       parser.setVariables(defaults);
       configuration.setVariables(defaults);
     }

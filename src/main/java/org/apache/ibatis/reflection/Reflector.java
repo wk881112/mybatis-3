@@ -49,19 +49,22 @@ public class Reflector {
   private final Class<?> type;
   private final String[] readablePropertyNames;
   private final String[] writeablePropertyNames;
+
+  // 对应setter getter方法执行器和参数类型，key是小写开头的参数名propName
   private final Map<String, Invoker> setMethods = new HashMap<>();
   private final Map<String, Invoker> getMethods = new HashMap<>();
   private final Map<String, Class<?>> setTypes = new HashMap<>();
   private final Map<String, Class<?>> getTypes = new HashMap<>();
+
   private Constructor<?> defaultConstructor;
 
   private Map<String, String> caseInsensitivePropertyMap = new HashMap<>();
 
   public Reflector(Class<?> clazz) {
     type = clazz;
-    addDefaultConstructor(clazz);
+    addDefaultConstructor(clazz); // 设置空参构造为defaultConstructor
     addGetMethods(clazz);
-    addSetMethods(clazz);
+    addSetMethods(clazz); //
     addFields(clazz);
     readablePropertyNames = getMethods.keySet().toArray(new String[getMethods.keySet().size()]);
     writeablePropertyNames = setMethods.keySet().toArray(new String[setMethods.keySet().size()]);
