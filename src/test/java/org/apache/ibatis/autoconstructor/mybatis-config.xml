@@ -34,7 +34,8 @@
     <!-- 设置mybatis配置，会根据name修改org.apache.ibatis.session.Configuration里的字段或属性 -->
     <settings>
         <setting name="lazyLoadingEnabled" value="false"/>
-        <setting name="logImpl" value="SLF4J"/>
+        <setting name="logImpl" value="NO_LOGGING"/>
+        <setting name="logPrefix" value="MyLogPre"/>
     </settings>
 
     <typeAliases>
@@ -42,19 +43,21 @@
         <package name="org.apache.ibatis.autoconstructor" />
     </typeAliases>
 
-    <typeHandlers>
+    <!--<typeHandlers>
         <typeHandler handler="abc"/>
-    </typeHandlers>
+    </typeHandlers>-->
 
-    <objectFactory type="abc" />
+<!--    <objectFactory type="org.apache.ibatis.submitted.global_variables_defaults.SupportClasses.CustomObjectFactory" >
+        <property name="abc" value="abc"/>
+    </objectFactory>-->
 
-    <objectWrapperFactory type="abc"/>
+<!--    <objectWrapperFactory type="abc"/>
 
-    <reflectorFactory type="abc" />
+    <reflectorFactory type="abc" />-->
 
-    <plugins>
+<!--    <plugins>
         <plugin interceptor="abc"></plugin>
-    </plugins>
+    </plugins>-->
 
     <environments default="development">
         <environment id="development">
@@ -69,7 +72,7 @@
         </environment>
     </environments>
 
-    <databaseIdProvider type="ab"/>
+    <databaseIdProvider type="DB_VENDOR"/>
 
 
     <mappers>

@@ -40,7 +40,7 @@ public class AutoConstructorTest {
     public static void setUp() throws Exception {
 
         // use log4j
-        LogFactory.useLog4JLogging();
+//        LogFactory.useLog4JLogging();
         log = LogFactory.getLog(AutoConstructorTest.class);
 
 

@@ -116,7 +116,7 @@ public class XMLConfigBuilder extends BaseBuilder {
 
 
       // #4 plugins
-      //
+      // interceptorChain.addInterceptor
       pluginElement(root.evalNode("plugins"));
 
       // #5 objectFactory
@@ -124,15 +124,15 @@ public class XMLConfigBuilder extends BaseBuilder {
       objectFactoryElement(root.evalNode("objectFactory"));
 
       // #6 objectWrapperFactory
-      //
+      // 不理解有什么用
       objectWrapperFactoryElement(root.evalNode("objectWrapperFactory"));
 
       // #7 reflectorFactory
-      //
+      // 不理解有什么用
       reflectorFactoryElement(root.evalNode("reflectorFactory"));
 
       // #2 settings
-      //
+      // 设置其他的settings配置
       settingsElement(settings);
       // read it after objectFactory and objectWrapperFactory issue #631
       environmentsElement(root.evalNode("environments"));
