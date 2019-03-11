@@ -123,68 +123,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     }
   }
 
-  private void buildStatementFromContext(List<XNode> list) {
-    if (configuration.getDatabaseId() != null) {
-      buildStatementFromContext(list, configuration.getDatabaseId());
-    }
-    buildStatementFromContext(list, null);
-  }
 
-  private void buildStatementFromContext(List<XNode> list, String requiredDatabaseId) {
-    for (XNode context : list) {
-      final XMLStatementBuilder statementParser = new XMLStatementBuilder(configuration, builderAssistant, context, requiredDatabaseId);
-      try {
-        statementParser.parseStatementNode();
-      } catch (IncompleteElementException e) {
-        configuration.addIncompleteStatement(statementParser);
-      }
-    }
-  }
-
-  private void parsePendingResultMaps() {
-    Collection<ResultMapResolver> incompleteResultMaps = configuration.getIncompleteResultMaps();
-    synchronized (incompleteResultMaps) {
-      Iterator<ResultMapResolver> iter = incompleteResultMaps.iterator();
-      while (iter.hasNext()) {
-        try {
-          iter.next().resolve();
-          iter.remove();
-        } catch (IncompleteElementException e) {
-          // ResultMap is still missing a resource...
-        }
-      }
-    }
-  }
-
-  private void parsePendingCacheRefs() {
-    Collection<CacheRefResolver> incompleteCacheRefs = configuration.getIncompleteCacheRefs();
-    synchronized (incompleteCacheRefs) {
-      Iterator<CacheRefResolver> iter = incompleteCacheRefs.iterator();
-      while (iter.hasNext()) {
-        try {
-          iter.next().resolveCacheRef();
-          iter.remove();
-        } catch (IncompleteElementException e) {
-          // Cache ref is still missing a resource...
-        }
-      }
-    }
-  }
-
-  private void parsePendingStatements() {
-    Collection<XMLStatementBuilder> incompleteStatements = configuration.getIncompleteStatements();
-    synchronized (incompleteStatements) {
-      Iterator<XMLStatementBuilder> iter = incompleteStatements.iterator();
-      while (iter.hasNext()) {
-        try {
-          iter.next().parseStatementNode();
-          iter.remove();
-        } catch (IncompleteElementException e) {
-          // Statement is still missing a resource...
-        }
-      }
-    }
-  }
 
   private void cacheRefElement(XNode context) {
     if (context != null) {
@@ -213,6 +152,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     }
   }
 
+  @Deprecated
   private void parameterMapElement(List<XNode> list) {
     for (XNode parameterMapNode : list) {
       String id = parameterMapNode.getStringAttribute("id");
@@ -439,6 +379,69 @@ public class XMLMapperBuilder extends BaseBuilder {
           // look at MapperAnnotationBuilder#loadXmlResource
           configuration.addLoadedResource("namespace:" + namespace);
           configuration.addMapper(boundType);
+        }
+      }
+    }
+  }
+
+  private void buildStatementFromContext(List<XNode> list) {
+    if (configuration.getDatabaseId() != null) {
+      buildStatementFromContext(list, configuration.getDatabaseId());
+    }
+    buildStatementFromContext(list, null);
+  }
+
+  private void buildStatementFromContext(List<XNode> list, String requiredDatabaseId) {
+    for (XNode context : list) {
+      final XMLStatementBuilder statementParser = new XMLStatementBuilder(configuration, builderAssistant, context, requiredDatabaseId);
+      try {
+        statementParser.parseStatementNode();
+      } catch (IncompleteElementException e) {
+        configuration.addIncompleteStatement(statementParser);
+      }
+    }
+  }
+
+  private void parsePendingResultMaps() {
+    Collection<ResultMapResolver> incompleteResultMaps = configuration.getIncompleteResultMaps();
+    synchronized (incompleteResultMaps) {
+      Iterator<ResultMapResolver> iter = incompleteResultMaps.iterator();
+      while (iter.hasNext()) {
+        try {
+          iter.next().resolve();
+          iter.remove();
+        } catch (IncompleteElementException e) {
+          // ResultMap is still missing a resource...
+        }
+      }
+    }
+  }
+
+  private void parsePendingCacheRefs() {
+    Collection<CacheRefResolver> incompleteCacheRefs = configuration.getIncompleteCacheRefs();
+    synchronized (incompleteCacheRefs) {
+      Iterator<CacheRefResolver> iter = incompleteCacheRefs.iterator();
+      while (iter.hasNext()) {
+        try {
+          iter.next().resolveCacheRef();
+          iter.remove();
+        } catch (IncompleteElementException e) {
+          // Cache ref is still missing a resource...
+        }
+      }
+    }
+  }
+
+  private void parsePendingStatements() {
+    Collection<XMLStatementBuilder> incompleteStatements = configuration.getIncompleteStatements();
+    synchronized (incompleteStatements) {
+      Iterator<XMLStatementBuilder> iter = incompleteStatements.iterator();
+      while (iter.hasNext()) {
+        try {
+          iter.next().parseStatementNode();
+          iter.remove();
+        } catch (IncompleteElementException e) {
+          // Statement is still missing a resource...
         }
       }
     }

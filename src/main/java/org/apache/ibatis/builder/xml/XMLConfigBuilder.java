@@ -411,18 +411,24 @@ public class XMLConfigBuilder extends BaseBuilder {
   private void mapperElement(XNode parent) throws Exception {
     if (parent != null) {
       for (XNode child : parent.getChildren()) {
-        if ("package".equals(child.getName())) {
+
+        if ("package".equals(child.getName())) { // 如果是package标签则使用以下解析方式
           String mapperPackage = child.getStringAttribute("name");
           configuration.addMappers(mapperPackage);
-        } else {
+
+        } else { // 如果是<mapper>标签，则使用以下的解析方式
           String resource = child.getStringAttribute("resource");
           String url = child.getStringAttribute("url");
           String mapperClass = child.getStringAttribute("class");
+
           if (resource != null && url == null && mapperClass == null) {
             ErrorContext.instance().resource(resource);
             InputStream inputStream = Resources.getResourceAsStream(resource);
             XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
-            mapperParser.parse();
+            mapperParser.parse(); // 比较 org.apache.ibatis.builder.annotation.MapperAnnotationBuilder.loadXmlResource 方法实现
+
+              //XMLMapperBuilder xmlParser = new XMLMapperBuilder(inputStream, assistant.getConfiguration(),
+              // xmlResource, configuration.getSqlFragments(), type.getName());
           } else if (resource == null && url != null && mapperClass == null) {
             ErrorContext.instance().resource(url);
             InputStream inputStream = Resources.getUrlAsStream(url);
@@ -432,6 +438,7 @@ public class XMLConfigBuilder extends BaseBuilder {
             Class<?> mapperInterface = Resources.classForName(mapperClass);
             configuration.addMapper(mapperInterface);
           } else {
+              // 只能指定一个属性
             throw new BuilderException("A mapper element may only specify a url, resource or class, but not more than one.");
           }
         }

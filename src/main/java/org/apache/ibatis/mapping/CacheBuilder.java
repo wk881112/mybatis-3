@@ -40,7 +40,7 @@ import org.apache.ibatis.reflection.SystemMetaObject;
 public class CacheBuilder {
   private final String id;
   private Class<? extends Cache> implementation;
-  private final List<Class<? extends Cache>> decorators;
+  private final List<Class<? extends Cache>> decorators; // 装饰者
   private Integer size;
   private Long clearInterval;
   private boolean readWrite;

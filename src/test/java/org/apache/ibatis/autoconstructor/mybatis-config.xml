@@ -76,7 +76,7 @@
 
 
     <mappers>
-        <mapper resource="org/apache/ibatis/autoconstructor/AutoConstructorMapper.xml"/>
+        <mapper resource="org/apache/ibatis/autoconstructor/SubjectMapper.xml"/>
     </mappers>
 
 </configuration>
