@@ -39,9 +39,9 @@
         <result column="weight" jdbcType="INTEGER" property="weight"/>
         <result column="active" jdbcType="TINYINT" property="active"/>
         <result column="dt" jdbcType="TIMESTAMP" property="dt"/>
-        <discriminator javaType="Object">
+       <!-- <discriminator javaType="Object">
             <case value=""></case>
-        </discriminator>
+        </discriminator>-->
     </resultMap>
     <select id="selectByPrimaryKey" parameterType="int" resultType="Subject">
         select

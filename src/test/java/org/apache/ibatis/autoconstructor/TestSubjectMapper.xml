@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.ibatis.autoconstructor.PrimitiveSubject">
+    <cache/>
+    <sql id="Base_Column_List">`id`,`name`,`age`,`height`,`weight`,`active`,`dt`</sql>
+    <resultMap id="BaseResultMap" type="Subject" autoMapping="true">
+        <constructor>
+            <idArg column="id" javaType="int" name="id"  />
+            <arg column="age" javaType="_int" name="age" />
+            <arg column="username" javaType="String" name="username" select="" resultMap=""/>
+        </constructor>
+    </resultMap>
+
+    <!-- 超复杂的 Result Map -->
+    <resultMap id="detailedBlogResultMap" type="Blog">
+        <constructor>
+            <idArg column="blog_id" javaType="int"/>
+        </constructor>
+        <result property="title" column="blog_title"/>
+        <association property="author" javaType="Author" columnPrefix="" >
+            <id property="id" column="author_id"/>
+            <result property="username" column="author_username"/>
+            <result property="password" column="author_password"/>
+            <result property="email" column="author_email"/>
+            <result property="bio" column="author_bio"/>
+            <result property="favouriteSection" column="author_favourite_section"/>
+        </association>
+        <collection property="posts" ofType="Post">
+            <id property="id" column="post_id"/>
+            <result property="subject" column="post_subject"/>
+            <association property="author" javaType="Author"/>
+            <collection property="comments" ofType="Comment">
+                <id property="id" column="comment_id"/>
+            </collection>
+            <collection property="tags" ofType="Tag" >
+                <id property="id" column="tag_id"/>
+            </collection>
+            <discriminator javaType="int" column="draft">
+                <case value="1" resultType="DraftPost"/>
+            </discriminator>
+        </collection>
+    </resultMap>
+</mapper>
